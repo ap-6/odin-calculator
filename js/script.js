@@ -66,6 +66,9 @@ function processInput(input, calc_parts, display) {
     else if (NUMBERS.includes(input) && calc_parts.operator !== "") { //2nd number
         processNumberInput(input, calc_parts, "second");
     }
+    else if (input === "=" && calc_parts.second !== "") {
+        processEqualInput(input, calc_parts);
+    }
 
 }
 
@@ -79,6 +82,32 @@ function processNumberInput(input, calc_parts, operand) {
     else {
         calc_parts[operand] = calc_parts[operand] + input;
     }
+}
+
+function processEqualInput(input, calc_parts) {
+    let result
+    //console.log("test " + input);
+    switch (calc_parts.operator) {
+        case "+":
+            result = add(+calc_parts.first, +calc_parts.second);
+            break;
+
+        case "-":
+            result = subtract(+calc_parts.first, +calc_parts.second);
+            break;
+
+        case "×":
+            result = multiply(+calc_parts.first, +calc_parts.second);
+            break;
+        
+        case "÷":
+            result = divide(+calc_parts.first, +calc_parts.second);
+            break;
+
+    }
+    calc_parts.first = result.toString();
+    calc_parts.second = "";
+    calc_parts.operator = "";
 }
 
 runCalculator();
