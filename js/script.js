@@ -34,46 +34,79 @@ function runCalculator() {
         first : "0",
         second : "",
         operator : "",
+        isContinuedString : false,
     }
     let display = document.querySelector("#display-input-bottom");
     let input;
     let numbers = document.querySelectorAll(".btn-color-1, .btn-color-2, .btn-color-3");
     numbers.forEach(element => {
         element.addEventListener("click", () => {
-            input = element.textContent;
-            processInput(input, calc_parts, display);
+            processInput(calc_parts, element);
             display.textContent = calc_parts.first + 
-                    calc_parts.operator + 
-                    calc_parts.second;
+                                calc_parts.operator + 
+                                calc_parts.second;
         });
     });
 }
 
-function processInput(input, calc_parts, display) {
+function processInput(calc_parts, element) {
+    let input = element.textContent;
     const NUMBERS = "0123456789";
-    const OPERATIONS = "÷×+-";
+    const OPERATORS = "+-×÷";
     if (input === "AC") { //reset
-        calc_parts.first = "0";
-        calc_parts.second = "";
-        calc_parts.operator = "";
+        processReset(calc_parts);
+    }
+    else if (input === "C") { //backspace
+        processBackSpace(calc_parts);
     }
     else if (NUMBERS.includes(input) && calc_parts.operator === "") { //1st number
         processNumberInput(input, calc_parts, "first");
     } 
-    else if (OPERATIONS.includes(input) && calc_parts.second === "") { //operator
+    else if (OPERATORS.includes(input) && calc_parts.second === "") { //operator
         calc_parts.operator = input;
+        calc_parts.isContinuedString = false;
     }
     else if (NUMBERS.includes(input) && calc_parts.operator !== "") { //2nd number
         processNumberInput(input, calc_parts, "second");
     }
     else if (input === "=" && calc_parts.second !== "") {
-        processEqualInput(input, calc_parts);
+        processEqualInput(calc_parts);
     }
-
 }
 
-function processNumberInput(input, calc_parts, operand) {
-    if(input === "0" && calc_parts[operand] === "0") { //prevent 0 spam ex: 000000
+function processReset(calc_parts) {
+    calc_parts.first = "0";
+    calc_parts.second = "";
+    calc_parts.operator = "";
+    calc_parts.isContinuedString = false;
+}
+
+function processBackSpace(calc_parts) {
+    if (calc_parts.isContinuedString) {
+        processReset(calc_parts);
+    }
+    else if (calc_parts.first === "0" && calc_parts.operator === "") {
+        return;
+    }
+    else if (calc_parts.operator === "") {
+        calc_parts.first = calc_parts.first.slice(0,-1);
+    }
+    else if (calc_parts.operator !== "" && calc_parts.second === "") {
+        calc_parts.operator = "";
+    }
+    else if (calc_parts.second !== "") {
+        calc_parts.second = calc_parts.second.slice(0,-1);
+    }
+}
+
+function processNumberInput(input, calc_parts, operand, isContinuousString) {
+    if (calc_parts.isContinuedString === true) { 
+        //edge case: when using result of previous expression and a new number is added,
+        //it won't append new number, but replace the old one with it
+        calc_parts.first = input;
+        calc_parts.isContinuedString = false;
+    }
+    else if(input === "0" && calc_parts[operand] === "0") { //prevent 0 spam ex: 000000
         return; 
     }
     else if (input !== "0" && calc_parts[operand] === "0") { //remove default 0
@@ -84,30 +117,27 @@ function processNumberInput(input, calc_parts, operand) {
     }
 }
 
-function processEqualInput(input, calc_parts) {
-    let result
-    //console.log("test " + input);
+function processEqualInput(calc_parts) {
+    let result;
+    
     switch (calc_parts.operator) {
         case "+":
             result = add(+calc_parts.first, +calc_parts.second);
             break;
-
         case "-":
             result = subtract(+calc_parts.first, +calc_parts.second);
             break;
-
         case "×":
             result = multiply(+calc_parts.first, +calc_parts.second);
             break;
-        
         case "÷":
             result = divide(+calc_parts.first, +calc_parts.second);
             break;
-
     }
     calc_parts.first = result.toString();
     calc_parts.second = "";
     calc_parts.operator = "";
+    calc_parts.isContinuedString = true;
 }
 
 runCalculator();
