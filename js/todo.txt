@@ -1,0 +1,9 @@
+make it so if you choose an operator after both first and second numbers are chosen, it 
+computes the 2 values and uses that as the new first value and then inserts the operator 
+you just hit
+
+add responsive button color changes
+
+add decimal point functionality
+
+use the top line of display

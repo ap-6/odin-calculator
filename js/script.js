@@ -46,6 +46,9 @@ function runCalculator() {
                                 calc_parts.operator + 
                                 calc_parts.second;
         });
+        element.addEventListener("mouseover", () => {
+            //element.style[background-color] = 
+        })
     });
 }
 
