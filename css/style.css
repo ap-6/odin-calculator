@@ -58,13 +58,11 @@ body {
     justify-content: center;
     align-items: center;
     user-select: none;
-    /* flex: 1; */
 }
 
 #equals {
     width: 21.6vh;
     height: 8vh;  
-    /* flex: 2; */
 }
 
 .btn-margin-l {

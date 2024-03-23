@@ -76,7 +76,7 @@ function processInput(calcParts, element) {
     else if (input === "C") { //backspace
         processBackSpace(calcParts);
     }
-    else if (NUMBERS.includes(input)) { //number
+    else if (NUMBERS.includes(input)) { 
         processNumberInput(input, calcParts);
     } 
     else if (OPERATORS.includes(input) && calcParts.second === "") { //operators
@@ -91,10 +91,10 @@ function processInput(calcParts, element) {
         calcParts.operator = input;
         calcParts.isContinuedString = false;
     }
-    else if (input === ".") {
+    else if (input === ".") { 
         processDecimal(calcParts);
     }
-    else if (input === "%") {
+    else if (input === "%") { 
         processPercentage(calcParts);
     }
 }
