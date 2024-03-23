@@ -57,8 +57,9 @@ function updateDisplay(displayBottom, displayTop, calcParts) {
         displayTop.textContent = "";
     }
     
-    if (displayTop.textContent.length > 9) {
-        displayTop.textContent = "..." + displayTop.textContent.slice(-9);
+    //truncate long values
+    if (displayTop.textContent.length > 12) {
+        displayTop.textContent = "..." + displayTop.textContent.slice(-12);
     }
     if (displayBottom.textContent.length > 9) {
         displayBottom.textContent = "..." + displayBottom.textContent.slice(-9);
@@ -199,7 +200,6 @@ function processLength(result) {
         return;
     }
     result = +result;
-    
 
     //scientific notation for long numbers
     if (result.toString().length > 9) { 
