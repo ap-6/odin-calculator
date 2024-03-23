@@ -76,15 +76,12 @@ function processInput(calcParts, element) {
     else if (input === "C") { //backspace
         processBackSpace(calcParts);
     }
-    else if (NUMBERS.includes(input) && calcParts.operator === "") { //1st number
-        processNumberInput(input, calcParts, "first");
+    else if (NUMBERS.includes(input)) { //number
+        processNumberInput(input, calcParts);
     } 
-    else if (OPERATORS.includes(input) && calcParts.second === "") { //operator
+    else if (OPERATORS.includes(input) && calcParts.second === "") { //operators
         calcParts.operator = input;
         calcParts.isContinuedString = false;
-    }
-    else if (NUMBERS.includes(input) && calcParts.operator !== "") { //2nd number
-        processNumberInput(input, calcParts, "second");
     }
     else if (input === "=" && calcParts.second !== "") { //equals
         processEqualInput(calcParts);
@@ -97,6 +94,19 @@ function processInput(calcParts, element) {
     else if (input === ".") {
         processDecimal(calcParts);
     }
+    else if (input === "%") {
+        processPercentage(calcParts);
+    }
+}
+
+function processPercentage(calcParts) {
+    let operand = (calcParts.operator === "") ? "first" : "second";
+    if (calcParts.second === "" && calcParts.operator !== "") {
+        //edge case: percentage after operator but before 2nd number
+        return;
+    }
+
+    calcParts[operand] = processLength(calcParts[operand] / 100);
 }
 
 function processDecimal(calcParts) {
@@ -151,7 +161,9 @@ function processBackSpace(calcParts) {
     }
 }
 
-function processNumberInput(input, calcParts, operand) {
+function processNumberInput(input, calcParts) {
+    let operand = (calcParts.operator === "") ? "first" : "second";
+    
     if (calcParts.isContinuedString === true) { 
         //edge case: when using result of previous expression and a new number is added,
         //it won't append new number, but replace the old one with it
@@ -200,18 +212,17 @@ function processLength(result) {
         return;
     }
     result = +result;
+    let decimalIndex = result.toString().indexOf(".");
+    let lastIndex = result.toString().length - 1;
+    let isBigNumber = result.toString().length > 9;
+    let isSmallNumber = Math.abs(result) < 1 && Math.abs(result) > 0;
 
     //scientific notation for long numbers
-    if (result.toString().length > 9) { 
-        console.log(result);
-        console.log(typeof(result));
-        console.log(typeof(+result));
+    if (isBigNumber || isSmallNumber) { 
         return result.toExponential(2);
     }
     //round decimals
     else if (result.toString().includes(".")) { 
-        let decimalIndex = result.toString().indexOf(".");
-        let lastIndex = result.toString().length - 1;
         if(lastIndex - decimalIndex > 2) {
             result = result.toFixed(2);
         }
