@@ -81,6 +81,24 @@ function processInput(calcParts, element) {
         calcParts.operator = input;
         calcParts.isContinuedString = false;
     }
+    else if (input === ".") {
+        processDecimal(calcParts);
+    }
+}
+
+function processDecimal(calcParts) {
+    let operand = (calcParts.operator === "") ? "first" : "second";
+    if (calcParts[operand].includes(".")) { 
+        //prevents multiple decimals
+        return;
+    }
+    else if (calcParts.second === "" && calcParts.operator !== "") { 
+        //for decimal inserts on empty operand
+        calcParts.second = "0.";
+    }
+    else {
+        calcParts[operand] += ".";
+    }
 }
 
 function processReset(calcParts) {
