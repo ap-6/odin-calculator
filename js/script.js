@@ -148,10 +148,34 @@ function processEqualInput(calc_parts) {
             result = operate(+calc_parts.first, "/", +calc_parts.second);
             break;
     }
-    calc_parts.first = result.toString();
+
+    result = processLength(result);
+
+    calc_parts.first = result;
     calc_parts.second = "";
     calc_parts.operator = "";
     calc_parts.isContinuedString = true;
+}
+
+function processLength(result) {
+    if (result === "") {
+        return;
+    }
+    result = +result;
+    //round decimals
+    if (result.toString().includes(".")) { 
+        let decimalIndex = result.toString().indexOf(".");
+        let lastIndex = result.toString().length - 1;
+        if(lastIndex - decimalIndex > 2) {
+            result = result.toFixed(2);
+        }
+    }
+    //scientific notation for long numbers
+    if (result.toString().length > 9) { 
+        return result.toExponential(2);
+    }
+
+    return result.toString();
 }
 
 runCalculator();
