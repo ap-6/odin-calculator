@@ -29,6 +29,7 @@ function operate (first, operator, second) {
             return divide(first, second);
     }
 }
+
 function runCalculator() {
     let calcParts = {
         first : "0",
@@ -231,8 +232,6 @@ function processLength(result) {
 
     //scientific notation for long numbers
     if (isBigNumber || isSmallNumber) { 
-        console.log(result.toExponential(2));
-        console.log(result.toExponential(2));
         return result.toExponential(2);
     }
     //round decimals
