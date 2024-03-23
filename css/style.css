@@ -25,7 +25,7 @@ body {
     width: 45vh;
     height: 70vh;
     background-color: rgb(31, 31, 31);
-    border-radius: 30px; 
+    border-radius: 15px; 
     color: white;
     display: flex;
     flex-direction: column;
@@ -50,8 +50,7 @@ body {
 
 .btn-row > span,
 .btn-row > div {
-
-    border-radius: 10px;
+    border-radius: 8px;
     width: 10vh;
     height: 8vh; 
     box-sizing: border-box;
@@ -59,8 +58,25 @@ body {
     justify-content: center;
     align-items: center;
     user-select: none;
-
+    /* flex: 1; */
 }
+
+#equals {
+    width: 21.6vh;
+    height: 8vh;  
+    /* flex: 2; */
+}
+
+.btn-margin-l {
+    margin-left: 1vh;
+    margin-right: 1vh;
+}
+
+.btn-margin-r {
+    margin-left: 0vh;
+    margin-right: 1vh;
+}
+
 
 .btn-color-1 {
     background-color: rgb(26, 26, 119);
@@ -101,15 +117,15 @@ body {
     border: solid 3px rgb(44, 19, 19);
 }
 
-.btn-size-1 {
+.btn-font-1 {
     font-size: 200%;
 }
 
-.btn-size-2 {
+.btn-font-2 {
     font-size: 130%;
 }
 
-.btn-size-3 {
+.btn-font-3 {
     font-size: 250%;
 }
 
