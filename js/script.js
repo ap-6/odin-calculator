@@ -48,9 +48,21 @@ function runCalculator() {
 }
 
 function updateDisplay(displayBottom, displayTop, calcParts) {
-    displayBottom.textContent = calcParts.first + 
-                                calcParts.operator + 
-                                calcParts.second;
+    if (calcParts.operator !== "") {
+        displayBottom.textContent = calcParts.second;
+        displayTop.textContent = calcParts.first + calcParts.operator;
+    }
+    else if (calcParts.operator === "") {
+        displayBottom.textContent = calcParts.first;
+        displayTop.textContent = "";
+    }
+    
+    if (displayTop.textContent.length > 9) {
+        displayTop.textContent = "..." + displayTop.textContent.slice(-9);
+    }
+    if (displayBottom.textContent.length > 9) {
+        displayBottom.textContent = "..." + displayBottom.textContent.slice(-9);
+    }
 }
 
 function processInput(calcParts, element) {
@@ -96,9 +108,16 @@ function processDecimal(calcParts) {
         //for decimal inserts on empty operand
         calcParts.second = "0.";
     }
+    else if (calcParts.isContinuedString === true) { 
+        //edge case: when using result of previous expression and a new decimal is added,
+        //it won't append new decimal, but replace the display with "0."
+        calcParts.first = "0.";
+        calcParts.isContinuedString = false;
+    }
     else {
         calcParts[operand] += ".";
     }
+
 }
 
 function processReset(calcParts) {
@@ -180,17 +199,22 @@ function processLength(result) {
         return;
     }
     result = +result;
+    
+
+    //scientific notation for long numbers
+    if (result.toString().length > 9) { 
+        console.log(result);
+        console.log(typeof(result));
+        console.log(typeof(+result));
+        return result.toExponential(2);
+    }
     //round decimals
-    if (result.toString().includes(".")) { 
+    else if (result.toString().includes(".")) { 
         let decimalIndex = result.toString().indexOf(".");
         let lastIndex = result.toString().length - 1;
         if(lastIndex - decimalIndex > 2) {
             result = result.toFixed(2);
         }
-    }
-    //scientific notation for long numbers
-    if (result.toString().length > 9) { 
-        return result.toExponential(2);
     }
 
     return result.toString();
