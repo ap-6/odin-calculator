@@ -58,6 +58,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    user-select: none;
 
 }
 
@@ -66,14 +67,38 @@ body {
     border: solid 3px rgb(12, 12, 59);
 }
 
+.btn-color-1:hover {
+    background-color: rgb(15, 15, 100);
+}
+
+.btn-color-1:active {
+    border: solid 3px rgb(26, 26, 134);
+}
+
 .btn-color-2 {
     background-color: rgb(71, 71, 71);
     border: solid 3px rgb(14, 14, 14);
 }
 
+.btn-color-2:hover {
+    background-color: rgb(55, 55, 55);
+}
+
+.btn-color-2:active {
+    border: solid 3px rgb(30, 30, 30);
+}
+
 .btn-color-3 {
     background-color: rgb(80, 51, 51);
     border: solid 3px rgb(22, 14, 14);
+}
+
+.btn-color-3:hover {
+    background-color: rgb(85, 43, 43);
+}
+
+.btn-color-3:active {
+    border: solid 3px rgb(44, 19, 19);
 }
 
 .btn-size-1 {
