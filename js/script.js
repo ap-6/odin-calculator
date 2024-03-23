@@ -30,131 +30,131 @@ function operate (first, operator, second) {
     }
 }
 function runCalculator() {
-    let calc_parts = {
+    let calcParts = {
         first : "0",
         second : "",
         operator : "",
         isContinuedString : false,
     }
-    let display_bottom = document.querySelector("#display-input-bottom");
-    let display_top = document.querySelector("#display-input-top");
+    let displayBottom = document.querySelector("#display-input-bottom");
+    let displayTop = document.querySelector("#display-input-top");
     let numbers = document.querySelectorAll(".btn-color-1, .btn-color-2, .btn-color-3");
     numbers.forEach(element => {
         element.addEventListener("click", () => {
-            processInput(calc_parts, element);
-            updateDisplay(display_bottom, display_top, calc_parts);
+            processInput(calcParts, element);
+            updateDisplay(displayBottom, displayTop, calcParts);
         });
     });
 }
 
-function updateDisplay(display_bottom, display_top, calc_parts) {
-    display_bottom.textContent = calc_parts.first + 
-                                calc_parts.operator + 
-                                calc_parts.second;
+function updateDisplay(displayBottom, displayTop, calcParts) {
+    displayBottom.textContent = calcParts.first + 
+                                calcParts.operator + 
+                                calcParts.second;
 }
 
-function processInput(calc_parts, element) {
+function processInput(calcParts, element) {
     let input = element.textContent;
     const NUMBERS = "0123456789";
     const OPERATORS = "+-×÷";
     if (input === "AC") { //reset
-        processReset(calc_parts);
+        processReset(calcParts);
     }
     else if (input === "C") { //backspace
-        processBackSpace(calc_parts);
+        processBackSpace(calcParts);
     }
-    else if (NUMBERS.includes(input) && calc_parts.operator === "") { //1st number
-        processNumberInput(input, calc_parts, "first");
+    else if (NUMBERS.includes(input) && calcParts.operator === "") { //1st number
+        processNumberInput(input, calcParts, "first");
     } 
-    else if (OPERATORS.includes(input) && calc_parts.second === "") { //operator
-        calc_parts.operator = input;
-        calc_parts.isContinuedString = false;
+    else if (OPERATORS.includes(input) && calcParts.second === "") { //operator
+        calcParts.operator = input;
+        calcParts.isContinuedString = false;
     }
-    else if (NUMBERS.includes(input) && calc_parts.operator !== "") { //2nd number
-        processNumberInput(input, calc_parts, "second");
+    else if (NUMBERS.includes(input) && calcParts.operator !== "") { //2nd number
+        processNumberInput(input, calcParts, "second");
     }
-    else if (input === "=" && calc_parts.second !== "") { //equals
-        processEqualInput(calc_parts);
+    else if (input === "=" && calcParts.second !== "") { //equals
+        processEqualInput(calcParts);
     }
-    else if (OPERATORS.includes(input) && calc_parts.second !== "") { //stringing operations
-        processEqualInput(calc_parts);
-        calc_parts.operator = input;
-        calc_parts.isContinuedString = false;
+    else if (OPERATORS.includes(input) && calcParts.second !== "") { //stringing operations
+        processEqualInput(calcParts);
+        calcParts.operator = input;
+        calcParts.isContinuedString = false;
     }
 }
 
-function processReset(calc_parts) {
-    calc_parts.first = "0";
-    calc_parts.second = "";
-    calc_parts.operator = "";
-    calc_parts.isContinuedString = false;
+function processReset(calcParts) {
+    calcParts.first = "0";
+    calcParts.second = "";
+    calcParts.operator = "";
+    calcParts.isContinuedString = false;
 }
 
-function processBackSpace(calc_parts) {
-    if (calc_parts.isContinuedString) {
+function processBackSpace(calcParts) {
+    if (calcParts.isContinuedString) {
         //backspace right after a calculation was done
-        processReset(calc_parts);
+        processReset(calcParts);
     }
-    else if (calc_parts.first === "0" && calc_parts.operator === "") {
+    else if (calcParts.first === "0" && calcParts.operator === "") {
         //when only 0 is on display
         return;
     }
-    else if (calc_parts.operator === "") {
+    else if (calcParts.operator === "") {
         //backspace for first number
-        calc_parts.first = calc_parts.first.slice(0,-1);
+        calcParts.first = calcParts.first.slice(0,-1);
     }
-    else if (calc_parts.operator !== "" && calc_parts.second === "") {
+    else if (calcParts.operator !== "" && calcParts.second === "") {
         //backspace for operator
-        calc_parts.operator = "";
+        calcParts.operator = "";
     }
-    else if (calc_parts.second !== "") {
+    else if (calcParts.second !== "") {
         //backspace for second number
-        calc_parts.second = calc_parts.second.slice(0,-1);
+        calcParts.second = calcParts.second.slice(0,-1);
     }
 }
 
-function processNumberInput(input, calc_parts, operand, isContinuousString) {
-    if (calc_parts.isContinuedString === true) { 
+function processNumberInput(input, calcParts, operand) {
+    if (calcParts.isContinuedString === true) { 
         //edge case: when using result of previous expression and a new number is added,
         //it won't append new number, but replace the old one with it
-        calc_parts.first = input;
-        calc_parts.isContinuedString = false;
+        calcParts.first = input;
+        calcParts.isContinuedString = false;
     }
-    else if(input === "0" && calc_parts[operand] === "0") { //prevent 0 spam ex: 000000
+    else if(input === "0" && calcParts[operand] === "0") { //prevent 0 spam ex: 000000
         return; 
     }
-    else if (input !== "0" && calc_parts[operand] === "0") { //remove default 0
-        calc_parts[operand] = input;
+    else if (input !== "0" && calcParts[operand] === "0") { //remove default 0
+        calcParts[operand] = input;
     }
     else {
-        calc_parts[operand] = calc_parts[operand] + input;
+        calcParts[operand] = calcParts[operand] + input;
     }
 }
 
-function processEqualInput(calc_parts) {
+function processEqualInput(calcParts) {
     let result;
     
-    switch (calc_parts.operator) {
+    switch (calcParts.operator) {
         case "+":
-            result = operate(+calc_parts.first, "+", +calc_parts.second);
+            result = operate(+calcParts.first, "+", +calcParts.second);
             break;
         case "-":
-            result = operate(+calc_parts.first, "-", +calc_parts.second);
+            result = operate(+calcParts.first, "-", +calcParts.second);
             break;
         case "×":
-            result = operate(+calc_parts.first, "*", +calc_parts.second);
+            result = operate(+calcParts.first, "*", +calcParts.second);
             break;
         case "÷":
-            result = operate(+calc_parts.first, "/", +calc_parts.second);
+            result = operate(+calcParts.first, "/", +calcParts.second);
             break;
     }
 
     result = processLength(result);
 
-    calc_parts.first = result;
-    calc_parts.second = "";
-    calc_parts.operator = "";
-    calc_parts.isContinuedString = true;
+    calcParts.first = result;
+    calcParts.second = "";
+    calcParts.operator = "";
+    calcParts.isContinuedString = true;
 }
 
 function processLength(result) {
