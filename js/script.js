@@ -34,11 +34,13 @@ function runCalculator() {
         first : "0",
         second : "",
         operator : "",
+        lastExpression : "",
         isContinuedString : false,
     }
     let displayBottom = document.querySelector("#display-input-bottom");
     let displayTop = document.querySelector("#display-input-top");
     let numbers = document.querySelectorAll(".btn-color-1, .btn-color-2, .btn-color-3");
+    
     numbers.forEach(element => {
         element.addEventListener("click", () => {
             processInput(calcParts, element);
@@ -48,11 +50,18 @@ function runCalculator() {
 }
 
 function updateDisplay(displayBottom, displayTop, calcParts) {
-    if (calcParts.operator !== "") {
+    if (calcParts.lastExpression !== "" && calcParts.operator === "") { 
+        //for chained expressions
+        displayBottom.textContent = calcParts.first;
+        displayTop.textContent = calcParts.lastExpression;
+    }
+    else if (calcParts.operator !== "") {
+        //during operator and 2nd value input
         displayBottom.textContent = calcParts.second;
         displayTop.textContent = calcParts.first + calcParts.operator;
     }
     else if (calcParts.operator === "") {
+        //during 1st value input
         displayBottom.textContent = calcParts.first;
         displayTop.textContent = "";
     }
@@ -105,6 +114,7 @@ function processPercentage(calcParts) {
         //edge case: percentage after operator but before 2nd number
         return;
     }
+    calcParts.lastExpression = ""; //to clear top text if user %'s the result of expression
 
     calcParts[operand] = processLength(calcParts[operand] / 100);
 }
@@ -135,6 +145,7 @@ function processReset(calcParts) {
     calcParts.first = "0";
     calcParts.second = "";
     calcParts.operator = "";
+    calcParts.lastExpression = "";
     calcParts.isContinuedString = false;
 }
 
@@ -167,8 +178,8 @@ function processNumberInput(input, calcParts) {
     if (calcParts.isContinuedString === true) { 
         //edge case: when using result of previous expression and a new number is added,
         //it won't append new number, but replace the old one with it
+        processReset(calcParts);
         calcParts.first = input;
-        calcParts.isContinuedString = false;
     }
     else if(input === "0" && calcParts[operand] === "0") { //prevent 0 spam ex: 000000
         return; 
@@ -200,7 +211,8 @@ function processEqualInput(calcParts) {
     }
 
     result = processLength(result);
-
+    
+    calcParts.lastExpression = calcParts.first + calcParts.operator + calcParts.second;
     calcParts.first = result;
     calcParts.second = "";
     calcParts.operator = "";
